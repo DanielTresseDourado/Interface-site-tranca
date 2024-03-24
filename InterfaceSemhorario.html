@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tranca Eletrônica</title>
+<style>
+    body {
+        /* Define a fonte e alinhamento de texto para todo o corpo do documento */
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0; /* Remove margens para evitar espaços em branco */
+        padding: 0; /* Remove preenchimento para evitar espaços em branco */
+        /* Define a imagem de fundo para o corpo do documento */
+        background-image: url('https://i.imgur.com/zRds9C4.jpeg'); /* URL da imagem de fundo */
+        background-size: contain; /* Tamanho da imagem de fundo - ajusta ao tamanho da tela sem cortar */
+        background-position: center; /* Posição da imagem de fundo */
+        background-repeat: no-repeat; /* Não repetir a imagem de fundo */
+        height: 100vh; /* Define a altura da tela para cobrir toda a tela */
+        display: flex; /* Ativa o modelo de layout flexível */
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center; /* Centraliza verticalmente */
+        flex-direction: column; /* Alinha os elementos em uma coluna */
+        position: relative; /* Define a posição relativa para poder posicionar os nomes dos criadores */
+    }
+    .creators {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        position: absolute; /* Define a posição absoluta */
+        top: 20px; /* Define a distância do topo da página */
+        left: 50%; /* Alinha os nomes dos criadores ao centro horizontalmente */
+        transform: translateX(-50%); /* Corrige a posição para centralizar corretamente */
+        white-space: pre-line; /* Permite quebras de linha */
+    }
+    .instructions {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+    .instruction-link {
+        color: blue; /* Cor do link */
+        text-decoration: underline; /* Sublinhar o link */
+        cursor: pointer; /* Mostrar cursor de apontar */
+    }
+    .container {
+        max-width: 400px;
+        padding: 20px; /* Adiciona espaçamento interno */
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px; /* Adiciona bordas arredondadas */
+        margin-top: 50px; /* Adiciona margem superior para separar dos nomes dos criadores */
+    }
+    .switch-buttons {
+        display: flex; /* Alinha os botões em uma linha */
+        justify-content: space-between; /* Espaçamento uniforme entre os botões */
+        margin-top: 20px; /* Adiciona um espaço superior */
+    }
+    .switch-button {
+        width: 100px;
+        height: 40px;
+        border-radius: 20px;
+        border: none;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .switch-open {
+        background-color: #66bb6a; /* Cor de fundo quando aberto */
+    }
+    .switch-close {
+        background-color: #cc3333; /* Cor de fundo quando fechado */
+    }
+</style>
+</head>
+<body>
+
+<div class="creators">
+    Criado por: Anuar Bulaty Tail,
+    Daniel Tresse Dourado,
+    Levi dos Santos Monteiro,
+    Nathan Andreani Netzel,
+    Pedro Henrique Cho Riuzim
+</div>
+
+<div class="container">
+    <h1>Tranca Eletrônica</h1>
+    <div class="switch-container">
+        <input type="checkbox" id="switch" class="switch-checkbox" hidden>
+        <label for="switch" class="switch-label"></label>
+    </div>
+    <div class="switch-buttons">
+        <button class="switch-button switch-open" id="openButton">Abrir</button>
+        <button class="switch-button switch-close" id="closeButton">Fechar</button>
+    </div>
+</div>
+
+<div class="instructions">
+    <p>Clique <a href="https://www.ieeeuel.org/_files/ugd/2f26cb_419c6400e3d4419a92a02784ef56ba79.pdf" target="_blank" class="instruction-link">aqui</a> para ver as instruções.</p>
+</div>
+
+<script>
+    const socket = new WebSocket('ws://ESP32_IP_ADDRESS:81'); // Substitua ESP32_IP_ADDRESS pelo endereço IP do seu ESP32
+
+    function sendCommand(command) {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(command);
+        } else {
+            console.error('A conexão WebSocket não está aberta.');
+        }
+    }
+
+    document.getElementById('openButton').addEventListener('click', function() {
+        sendCommand('OPEN');
+        document.getElementById('openButton').classList.add('switch-open');
+        document.getElementById('closeButton').classList.remove('switch-close');
+    });
+
+    document.getElementById('closeButton').addEventListener('click', function() {
+        sendCommand('CLOSE');
+        document.getElementById('closeButton').classList.add('switch-close');
+        document.getElementById('openButton').classList.remove('switch-open');
+    });
+</script>
+
+</body>
+</html>
